@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Setup", "Setup\Setup.vcxproj", "{E398B466-38DC-4AA3-86E5-1EF9AD0CE4F5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JuliaTest", "JuliaTest\JuliaTest.vcxproj", "{C7E1FED0-BA95-4739-9EAD-8206EE4114CA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dot_Product", "Dot_Product\Dot_Product.vcxproj", "{A6C73225-BFB6-4D37-B1D2-D373D20779AE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E398B466-38DC-4AA3-86E5-1EF9AD0CE4F5}.Debug|x64.ActiveCfg = Debug|x64
+		{E398B466-38DC-4AA3-86E5-1EF9AD0CE4F5}.Debug|x64.Build.0 = Debug|x64
+		{E398B466-38DC-4AA3-86E5-1EF9AD0CE4F5}.Release|x64.ActiveCfg = Release|x64
+		{E398B466-38DC-4AA3-86E5-1EF9AD0CE4F5}.Release|x64.Build.0 = Release|x64
+		{C7E1FED0-BA95-4739-9EAD-8206EE4114CA}.Debug|x64.ActiveCfg = Debug|x64
+		{C7E1FED0-BA95-4739-9EAD-8206EE4114CA}.Debug|x64.Build.0 = Debug|x64
+		{C7E1FED0-BA95-4739-9EAD-8206EE4114CA}.Release|x64.ActiveCfg = Release|x64
+		{C7E1FED0-BA95-4739-9EAD-8206EE4114CA}.Release|x64.Build.0 = Release|x64
+		{A6C73225-BFB6-4D37-B1D2-D373D20779AE}.Debug|x64.ActiveCfg = Debug|x64
+		{A6C73225-BFB6-4D37-B1D2-D373D20779AE}.Debug|x64.Build.0 = Debug|x64
+		{A6C73225-BFB6-4D37-B1D2-D373D20779AE}.Release|x64.ActiveCfg = Release|x64
+		{A6C73225-BFB6-4D37-B1D2-D373D20779AE}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2BE02F86-7358-45B3-A22F-4EDF7839387E}
+	EndGlobalSection
+EndGlobal
