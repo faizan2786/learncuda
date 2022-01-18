@@ -115,10 +115,8 @@ cudaError_t cudaDotProduct(float const *a_h, float const *b_h, float* c_partial_
 
 	dotProductKernel << <numBlocks, threadsPerBlock >> > (a_dev, b_dev, c_dev);
 
-	cudaDeviceSynchronize(); // waits for GPU to finish
-
 	// copy device data to host
-	status = cudaMemcpy(c_partial_h, c_dev, out_size, cudaMemcpyDeviceToHost);
+	status = cudaMemcpy(c_partial_h, c_dev, out_size, cudaMemcpyDeviceToHost);   // blocks CPU until the kernel is finished
 
 	if (status != cudaSuccess)
 		cout << "Error in the cuda kernel!" << endl;
