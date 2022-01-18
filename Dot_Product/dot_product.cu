@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <algorithm>
 
+#include "..\Helper.h"
+
 using namespace std;
 
 const int N = 1024 * 60;			// array dimensions
@@ -20,7 +22,7 @@ const int numBlocks = std::min(MAX_BLOCKS, (N + threadsPerBlock-1)/ threadsPerBl
 // helper function to have dot product of two vectors a and b 
 // store its partial result in a vector c_partial 
 // where each element is partial dot product computed by each block
-cudaError_t cudaDotProduct(float const *a_h, float const *b_h, float *c_partial_h);
+void cudaDotProduct(float const *a_h, float const *b_h, float *c_partial_h);
 
 // kernel declaration
 __global__ void dotProductKernel(float* a_dev, float* b_dev, float* c_partial_dev);
@@ -42,9 +44,7 @@ int main(){
 		b[i] = 2 * i;
 	}
 
-	auto status = cudaDotProduct(a, b, c_partial);
-	if (status != cudaSuccess)
-		return 0;
+	cudaDotProduct(a, b, c_partial);
 
 	for (int i=0; i< numBlocks; i++)
 		dot_product += c_partial[i];
@@ -96,7 +96,7 @@ __global__ void dotProductKernel(float* a_dev, float* b_dev, float* c_partial_de
 }
 
 
-cudaError_t cudaDotProduct(float const *a_h, float const *b_h, float* c_partial_h) {
+void cudaDotProduct(float const *a_h, float const *b_h, float* c_partial_h) {
 
 	cudaError_t status;
 
@@ -105,26 +105,21 @@ cudaError_t cudaDotProduct(float const *a_h, float const *b_h, float* c_partial_
 	float out_size = numBlocks * sizeof(float);
 
 	// allocate device memory
-	status = cudaMalloc(&a_dev, in_size);
-	status = cudaMalloc(&b_dev, in_size);
-	status = cudaMalloc(&c_dev, out_size);
+	HANDLE_CUDA_ERROR(cudaMalloc(&a_dev, in_size));
+	HANDLE_CUDA_ERROR(cudaMalloc(&b_dev, in_size));
+	HANDLE_CUDA_ERROR(cudaMalloc(&c_dev, out_size));
 
 	// copy host data to device
-	status = cudaMemcpy(a_dev, a_h, in_size, cudaMemcpyHostToDevice);
-	status = cudaMemcpy(b_dev, b_h, in_size, cudaMemcpyHostToDevice);
+	HANDLE_CUDA_ERROR(cudaMemcpy(a_dev, a_h, in_size, cudaMemcpyHostToDevice));
+	HANDLE_CUDA_ERROR(cudaMemcpy(b_dev, b_h, in_size, cudaMemcpyHostToDevice));
 
 	dotProductKernel << <numBlocks, threadsPerBlock >> > (a_dev, b_dev, c_dev);
 
 	// copy device data to host
-	status = cudaMemcpy(c_partial_h, c_dev, out_size, cudaMemcpyDeviceToHost);   // blocks CPU until the kernel is finished
+	HANDLE_CUDA_ERROR(cudaMemcpy(c_partial_h, c_dev, out_size, cudaMemcpyDeviceToHost));   // blocks CPU until the kernel is finished
 
-	if (status != cudaSuccess)
-		cout << "Error in the cuda kernel!" << endl;
-
-	cudaFree(a_dev);
-	cudaFree(b_dev);
-	cudaFree(c_dev);
-
-	return status;
+	HANDLE_CUDA_ERROR(cudaFree(a_dev));
+	HANDLE_CUDA_ERROR(cudaFree(b_dev));
+	HANDLE_CUDA_ERROR(cudaFree(c_dev));
 }
 

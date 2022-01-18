@@ -7,6 +7,8 @@
 #include "fpBitmap.h"
 #include "cuComplex.h"
 
+#include "../Helper.h"
+
 #define DIM 1000
 
 __global__ void kernel(unsigned char* d_ptr);
@@ -38,16 +40,15 @@ int main() {
 
 	auto d_t1 = std::chrono::high_resolution_clock::now();
 
-	auto status = cudaMalloc(&d_bitmap, h_bitmap.get_image_size());  // allocate bitmap memory on device
+	HANDLE_CUDA_ERROR(cudaMalloc(&d_bitmap, h_bitmap.get_image_size()));  // allocate bitmap memory on device
+
 	dim3 threadsPerBlock = 1; // (1024, 1024);
 	dim3 numBlocks(DIM, DIM); // (1, 1);  // have the grid size same as the image size for 1-to-1 indexing
 
 	kernel << <numBlocks, threadsPerBlock >> > (d_bitmap);
-	status = cudaMemcpy(h_ptr, d_bitmap, h_bitmap.get_image_size(), cudaMemcpyDeviceToHost); 	// copy bitmap back to the host
-	if (status == cudaErrorIllegalAddress)
-		std::cout << "Error while accessing data in the kernel!" << std::endl;
+	HANDLE_CUDA_ERROR(cudaMemcpy(h_ptr, d_bitmap, h_bitmap.get_image_size(), cudaMemcpyDeviceToHost)); 	// copy bitmap back to the host
 
-	cudaFree(d_bitmap);
+	HANDLE_CUDA_ERROR(cudaFree(d_bitmap));
 
 	auto d_t2 = std::chrono::high_resolution_clock::now();
 	auto d_time_span = std::chrono::duration_cast<std::chrono::microseconds>(d_t2 - d_t1);

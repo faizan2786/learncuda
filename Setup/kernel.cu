@@ -6,6 +6,7 @@
 #include<iostream>
 #include<chrono>
 
+#include "../Helper.h"
 
 // helper function to get cuda device properties
 void GetCudaDeviceProp() {
@@ -47,11 +48,8 @@ void deviceVectorAdd(float* A, float* B, float* C, int vecSize) {
     cudaMalloc(&d_C, num_bytes);
 
     // Transfer arrays a and b to device.
-    cudaMemcpy(d_A, A, num_bytes, cudaMemcpyHostToDevice);
-    cudaMemcpy(d_B, B, num_bytes, cudaMemcpyHostToDevice);
-
-    // check for any errors while copying data
-    printf("Device Variable Copying:\t%s\n", cudaGetErrorString(cudaGetLastError()));
+    HANDLE_CUDA_ERROR(cudaMemcpy(d_A, A, num_bytes, cudaMemcpyHostToDevice));
+    HANDLE_CUDA_ERROR(cudaMemcpy(d_B, B, num_bytes, cudaMemcpyHostToDevice));
  
     // Calculate blocksize and gridsize.
     int threadsPerBlock = 1024;                        // block size
@@ -66,7 +64,7 @@ void deviceVectorAdd(float* A, float* B, float* C, int vecSize) {
     std::cout << "Device time: " << time_span.count() << " micro sec" << std::endl;
 
     // Copy result array c back to host memory.
-    cudaMemcpy(C, d_C, num_bytes, cudaMemcpyDeviceToHost);
+    HANDLE_CUDA_ERROR(cudaMemcpy(C, d_C, num_bytes, cudaMemcpyDeviceToHost));
 
     // Free device memory
     cudaFree(d_A);
